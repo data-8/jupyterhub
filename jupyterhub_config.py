@@ -3,6 +3,7 @@ c = get_config()
 
 import os
 import sys
+sys.path.insert(0, '/srv/oauthenticator')
 
 # Base configuration
 c.JupyterHub.log_level = "INFO"
@@ -24,10 +25,9 @@ c.GoogleOAuthenticator.login_service = 'UC Berkeley'
 
 # Configure the spawner
 c.JupyterHub.spawner_class = 'systemuserspawner.SystemUserSpawner'
-#c.JupyterHub.spawner_class = 'swarmspawner.SwarmSpawner'
 c.SystemUserSpawner.container_image = 'data8/systemuser:nodrive'
-c.DockerSpawner.tls_cert = '{{ docker_tls_path }}/cert.pem'
-c.DockerSpawner.tls_key = '{{ docker_tls_path }}/key.pem'
+c.DockerSpawner.tls_cert = os.environ['DOCKER_TLS_CERT']
+c.DockerSpawner.tls_key = os.environ['DOCKER_TLS_KEY']
 c.DockerSpawner.remove_containers = True
 #c.DockerSpawner.read_only_volumes = {'/home/shared':'/home/shared'}
 c.DockerSpawner.volumes = {'/home/shared':'/home/shared'}
@@ -36,14 +36,17 @@ c.DockerSpawner.container_ip = "0.0.0.0"
 #c.Spawner.start_timeout = 300
 #c.Spawner.http_timeout = 150
 
+# The docker instances need access to the Hub, so the default loopback port
+# doesn't work. We need to tell the hub to listen on 0.0.0.0 because it's in a
+# container, and we'll expose the port properly when the container is run. Then,
+# we explicitly tell the spawned containers to connect to the proper IP address.
 c.JupyterHub.proxy_api_ip = '0.0.0.0'
 c.JupyterHub.hub_ip = '0.0.0.0'
+c.DockerSpawner.hub_ip_connect = os.environ['HUB_IP']
 
 # Add users to the admin list, the whitelist, and also record their user ids
-root = os.environ.get('OAUTHENTICATOR_DIR', os.path.dirname(__file__))
-sys.path.insert(0, root)
 
-with open(os.path.join(root, 'userlist')) as f:
+with open('/srv/oauthenticator/userlist') as f:
     for line in f:
         if line.isspace(): continue
         parts = line.split()
