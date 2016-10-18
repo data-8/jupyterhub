@@ -28,6 +28,9 @@ RUN apt-get -q update
 RUN apt-get install -y --no-install-recommends ca-certificates nginx-extras lua-cjson
 RUN pip --no-cache-dir install git+https://github.com/yuvipanda/jupyterhub-nginx-chp.git@3840564
 
+# Add jupyterhub_config.py
+ADD jupyterhub_config.py /srv/jupyterhub/jupyterhub_config.py
+
 # set working directory to the jupyterhub directory
 WORKDIR /srv/jupyterhub
 
