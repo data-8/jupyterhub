@@ -1,4 +1,4 @@
-FROM jupyterhub/jupyterhub-onbuild:0.6.1
+FROM jupyterhub/jupyterhub:latest
 
 MAINTAINER Ryan Lovett <rylo@berkeley.edu>
 
