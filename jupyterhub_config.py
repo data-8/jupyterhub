@@ -12,7 +12,7 @@ c.JupyterHub.admin_access = True
 c.JupyterHub.confirm_no_ssl = True
 c.JupyterHub.proxy_check_interval = 30
 # Use the nginx based proxy, rather than the nodejs one
-c.JupyterHub.proxy_cmd = '/opt/conda/bin/nchp'
+# c.JupyterHub.proxy_cmd = '/opt/conda/bin/nchp'
 
 # Configure the authenticator
 c.JupyterHub.authenticator_class = 'docker_oauth.DockerOAuthenticator'
