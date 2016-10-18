@@ -44,6 +44,11 @@ c.JupyterHub.proxy_api_ip = '0.0.0.0'
 c.JupyterHub.hub_ip = '0.0.0.0'
 c.DockerSpawner.hub_ip_connect = os.environ['HUB_IP']
 
+# Enable statsd so that Datadog can keep track of metrics
+c.JupyterHub.statsd_host = 'localhost'
+c.JupyterHub.statsd_port = 8125
+c.JupyterHub.statsd_prefix = 'jupyterhub'
+
 # Add users to the admin list, the whitelist, and also record their user ids
 
 with open('/srv/oauthenticator/userlist') as f:
